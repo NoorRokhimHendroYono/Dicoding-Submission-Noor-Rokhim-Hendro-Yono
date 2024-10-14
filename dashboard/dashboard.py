@@ -75,7 +75,7 @@ st.markdown("""
 
 @st.cache_data
 def load_data():
-    return pd.read_csv('https://raw.githubusercontent.com/FairuzAldaPerkasa/Dicoding-Submission-Fairuz-Alda-Perkasa/refs/heads/master/dashboard/Project_Data_Clean.csv')
+    return pd.read_csv('https://raw.githubusercontent.com/NoorRokhimHendroYono/Dicoding-Submission-Noor-Rokhim-Hendro-Yono/refs/heads/master/dashboard/Project_Data_Clean.csv')
 
 def create_top_categories_bycity_df(df):
     return df.rename(columns={"product_category_name_english": "category_name"})
@@ -141,7 +141,7 @@ rfm_df = create_rfm_df(all_df)
 
 # Top 5 Most Popular Category in Leading Cities
 st.markdown("<h2 class='medium-font'>Top 5 Product Categories by City 🏙️</h2>", unsafe_allow_html=True)
-cities = ['Sao Paulo', 'Rio de Janeiro', 'Belo Horizonte', 'Brasilia', 'Curitiba']
+cities = ['Fortaleza', 'Rio de Janeiro', 'Sao Carlos', 'Brasilia', 'Vassouras']
 city_tabs = st.tabs(cities)
 
 for tab, city in zip(city_tabs, cities):
@@ -206,4 +206,4 @@ with tab2:
 
 # Footer
 st.markdown("<hr>", unsafe_allow_html=True)
-st.markdown("<p style='text-align: center; color: #888;'>Created by Fairuz Alda Perkasa | Bangkit 2024</p>", unsafe_allow_html=True)
+st.markdown("<p style='text-align: center; color: #888;'>Created by Noor Rokhim Hendro Yono | Bangkit 2024</p>", unsafe_allow_html=True)
