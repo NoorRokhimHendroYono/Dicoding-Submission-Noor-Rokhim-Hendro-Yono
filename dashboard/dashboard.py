@@ -168,55 +168,59 @@ else:
     # Prepare datasets
     transaction_df = create_transaction_df(all_df)
     top_categories_bycity_df = create_top_categories_bycity_df(all_df)
-    rfm_df = create_rfm_df(all_df)
 
-# Top 5 Most Popular Category in Leading Cities
-st.markdown("<h2 class='medium-font'>Top 5 Product Categories by City 🏙️</h2>", unsafe_allow_html=True)
-cities = ['Franca', 'Sao Bernardo Do Campo', 'Guarulhos', 'Brasilia', 'Montes Claros']
-city_tabs = st.tabs(cities)
+    if top_categories_bycity_df.empty:
+        st.error("Data untuk kategori berdasarkan kota tidak tersedia.")
+    else:
+        rfm_df = create_rfm_df(all_df)
 
-for tab, city in zip(city_tabs, cities):
-    with tab:
-        city_df, title = specified_city(top_categories_bycity_df, city)
-        if not city_df.empty:
-            fig = show_figures(city_df, title)
+        # Top 5 Most Popular Category in Leading Cities
+        st.markdown("<h2 class='medium-font'>Top 5 Product Categories by City 🏙️</h2>", unsafe_allow_html=True)
+        cities = ['Franca', 'Sao Bernardo Do Campo', 'Guarulhos', 'Brasilia', 'Montes Claros']
+        city_tabs = st.tabs(cities)
+
+        for tab, city in zip(city_tabs, cities):
+            with tab:
+                city_df, title = specified_city(top_categories_bycity_df, city)
+                if not city_df.empty:
+                    fig = show_figures(city_df, title)
+                    st.pyplot(fig)
+                else:
+                    st.write(f"Tidak ada data untuk {city}.")
+
+        # Order Frequencies and RFM Analysis
+        st.markdown("<h2 class='medium-font'>Order Trends and Customer Analysis 📊</h2>", unsafe_allow_html=True)
+        tab1, tab2 = st.tabs(['📈 Order Trends', '👥 Customer Segmentation'])
+
+        with tab1:
+            st.markdown("<div class='chart-container'>", unsafe_allow_html=True)
+            fig, ax = plt.subplots(figsize=(20, 10))
+            ax.plot(transaction_df['order_approved_at'], transaction_df['order_count'], marker='o', color='#FFC107')
+            ax.set_title("Order Trends Over Time", loc='center', fontsize=24, color='white')
+            ax.set_xlabel("Time", fontsize=16, color='white')
+            ax.set_ylabel("Number of Orders", fontsize=16, color='white')
+            ax.tick_params(axis='x', labelsize=12, colors='white')
+            ax.tick_params(axis='y', labelsize=12, colors='white')
+            ax.grid(True, linestyle='--', alpha=0.6)
+            ax.set_facecolor("#1e2130")
+            fig.patch.set_facecolor('#0e1117')
             st.pyplot(fig)
-        else:
-            st.write(f"Tidak ada data untuk {city}.")
+            st.markdown("</div>", unsafe_allow_html=True)
 
-# Order Frequencies and RFM Analysis
-st.markdown("<h2 class='medium-font'>Order Trends and Customer Analysis 📊</h2>", unsafe_allow_html=True)
-tab1, tab2 = st.tabs(['📈 Order Trends', '👥 Customer Segmentation'])
-
-with tab1:
-    st.markdown("<div class='chart-container'>", unsafe_allow_html=True)
-    fig, ax = plt.subplots(figsize=(20, 10))
-    ax.plot(transaction_df['order_approved_at'], transaction_df['order_count'], marker='o', linewidth=2, color="#4CAF50")
-    ax.set_title("Monthly Order Trends", loc='center', fontsize=24, color='white')
-    ax.set_xlabel("Date", fontsize=16, color='white')
-    ax.set_ylabel("Number of Orders", fontsize=16, color='white')
-    ax.tick_params(axis='x', labelrotation=45, labelsize=12, colors='white')
-    ax.tick_params(axis='y', labelsize=12, colors='white')
-    ax.grid(True, linestyle='--', alpha=0.6)
-    ax.set_facecolor("#1e2130")
-    fig.patch.set_facecolor('#0e1117')
-    st.pyplot(fig)
-    st.markdown("</div>", unsafe_allow_html=True)
-
-with tab2:
-    st.markdown("<div class='chart-container'>", unsafe_allow_html=True)
-    fig, ax = plt.subplots(figsize=(20, 10))
-    ax.scatter(rfm_df['Recency'], rfm_df['Frequency'], s=rfm_df['Monetary']/100, alpha=0.7, color='#FFC107')
-    ax.set_title("Customer Segmentation by RFM", loc='center', fontsize=24, color='white')
-    ax.set_xlabel("Recency (Days Since Last Purchase)", fontsize=16, color='white')
-    ax.set_ylabel("Frequency (Number of Orders)", fontsize=16, color='white')
-    ax.tick_params(axis='x', labelsize=12, colors='white')
-    ax.tick_params(axis='y', labelsize=12, colors='white')
-    ax.grid(True, linestyle='--', alpha=0.6)
-    ax.set_facecolor("#1e2130")
-    fig.patch.set_facecolor('#0e1117')
-    st.pyplot(fig)
-    st.markdown("</div>", unsafe_allow_html=True)
+        with tab2:
+            st.markdown("<div class='chart-container'>", unsafe_allow_html=True)
+            fig, ax = plt.subplots(figsize=(20, 10))
+            ax.scatter(rfm_df['Recency'], rfm_df['Frequency'], s=rfm_df['Monetary']/100, alpha=0.7, color='#FFC107')
+            ax.set_title("Customer Segmentation by RFM", loc='center', fontsize=24, color='white')
+            ax.set_xlabel("Recency (Days Since Last Purchase)", fontsize=16, color='white')
+            ax.set_ylabel("Frequency (Number of Orders)", fontsize=16, color='white')
+            ax.tick_params(axis='x', labelsize=12, colors='white')
+            ax.tick_params(axis='y', labelsize=12, colors='white')
+            ax.grid(True, linestyle='--', alpha=0.6)
+            ax.set_facecolor("#1e2130")
+            fig.patch.set_facecolor('#0e1117')
+            st.pyplot(fig)
+            st.markdown("</div>", unsafe_allow_html=True)
 
 # Footer
 st.markdown("<hr>", unsafe_allow_html=True)
