@@ -193,6 +193,22 @@ with tab2:
         for i, v in enumerate(data[metric]):
             ax.text(i, v, f'{v:,.0f}', ha='center', va='bottom', fontsize=10, color='white')
     
+    recency_top5 = rfm_df.sort_values('Recency').head(5)
+    frequency_top5 = rfm_df.sort_values('Frequency', ascending=False).head(5)
+    monetary_top5 = rfm_df.sort_values('Monetary', ascending=False).head(5)
+
+    fig1, ax1 = plt.subplots()
+    plot_rfm(recency_top5, 'Recency', ax1, '#4CAF50')
+
+    fig2, ax2 = plt.subplots()
+    plot_rfm(frequency_top5, 'Frequency', ax2, '#FFC107')
+
+    fig3, ax3 = plt.subplots()
+    plot_rfm(monetary_top5, 'Monetary', ax3, '#2196F3')
+
+    st.pyplot(fig1)
+    st.pyplot(fig2)
+    st.pyplot(fig3)
     for col, (metric, color) in zip([col1, col2, col3], 
                                     [('Recency', '#FF9800'), ('Frequency', '#2196F3'), ('Monetary', '#4CAF50')]):
         with col:
