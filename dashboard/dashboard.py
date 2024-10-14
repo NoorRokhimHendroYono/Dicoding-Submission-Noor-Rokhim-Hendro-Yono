@@ -141,7 +141,7 @@ rfm_df = create_rfm_df(all_df)
 
 # Top 5 Most Popular Category in Leading Cities
 st.markdown("<h2 class='medium-font'>Top 5 Product Categories by City 🏙️</h2>", unsafe_allow_html=True)
-cities = ['Fortaleza', 'Rio de Janeiro', 'Sao Carlos', 'Brasilia', 'Vassouras']
+cities = ['Sao Paulo', 'Rio de Janeiro', 'Belo Horizonte', 'Brasilia', 'Curitiba']
 city_tabs = st.tabs(cities)
 
 for tab, city in zip(city_tabs, cities):
