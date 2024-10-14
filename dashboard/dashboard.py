@@ -7,6 +7,7 @@ from babel.numbers import format_currency
 # Set page configuration
 st.set_page_config(layout="wide", page_title="Brazilian E-Commerce Insights", page_icon="🇧🇷")
 
+# Custom CSS for styling
 st.markdown("""
 <style>
     @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap');
@@ -75,18 +76,22 @@ st.markdown("""
 
 @st.cache_data
 def load_data():
+    # Load data from the specified CSV URL
     return pd.read_csv('https://raw.githubusercontent.com/NoorRokhimHendroYono/Dicoding-Submission-Noor-Rokhim-Hendro-Yono/refs/heads/master/dashboard/Project_Data_Clean.csv')
 
 def create_top_categories_bycity_df(df):
+    # Renaming for easier reference
     return df.rename(columns={"product_category_name_english": "category_name"})
 
 def specified_city(df, city):
+    # Filter data for a specified city
     lowercase_city = city.lower()
-    customer_city_df = df[df.customer_city == lowercase_city]
+    customer_city_df = df[df.customer_city.str.lower() == lowercase_city]
     title = f"Top 5 Product Categories in {city}"
     return customer_city_df, title
 
 def show_figures(df, title):
+    # Create bar plot for product categories
     city_agg_df = df.groupby(by="category_name").agg({
         'order_id': 'nunique'
     }).reset_index().sort_values(by='order_id', ascending=False).head(5)
@@ -109,14 +114,17 @@ def show_figures(df, title):
     return fig
 
 def create_transaction_df(df):
-    transaction_df = df.groupby(pd.to_datetime(df['order_approved_at']).dt.to_period('M')).agg({
+    # Create a DataFrame for transaction trends
+    df['order_approved_at'] = pd.to_datetime(df['order_approved_at'], errors='coerce')  # Handle any conversion issues
+    transaction_df = df.groupby(df['order_approved_at'].dt.to_period('M')).agg({
         'order_id': 'nunique'
     }).rename(columns={'order_id': 'order_count'}).reset_index()
     transaction_df['order_approved_at'] = transaction_df['order_approved_at'].dt.to_timestamp()
     return transaction_df
 
 def create_rfm_df(df):
-    df['order_approved_at'] = pd.to_datetime(df['order_approved_at'])
+    # Create RFM DataFrame
+    df['order_approved_at'] = pd.to_datetime(df['order_approved_at'], errors='coerce')
     recent_date = df['order_approved_at'].max()
     rfm_df = df.groupby("customer_id").agg({
         "order_approved_at": lambda x: (recent_date - x.max()).days,
