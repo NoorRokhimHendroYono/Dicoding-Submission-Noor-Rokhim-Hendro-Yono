@@ -137,11 +137,17 @@ all_df = load_data()
 # Main app
 st.markdown("<h1 class='big-font' style='text-align: center;'>Project Data Analyst</h1>", unsafe_allow_html=True)
 st.markdown("<h2 style='text-align: center; color: #2196F3;'>Brazilian E-Commerce Public Dataset</h2>", unsafe_allow_html=True)
+# Check the columns in the loaded DataFrame
+st.write(all_df.columns)
 
-# Prepare datasets
-top_categories_bycity_df = create_top_categories_bycity_df(all_df)
-transaction_df = create_transaction_df(all_df)
-rfm_df = create_rfm_df(all_df)
+# Verify if the required column 'order_approved_at' exists
+if 'order_approved_at' not in all_df.columns:
+    st.error("The 'order_approved_at' column is missing from the dataset.")
+else:
+    # Prepare datasets
+    transaction_df = create_transaction_df(all_df)
+    top_categories_bycity_df = create_top_categories_bycity_df(all_df)
+    rfm_df = create_rfm_df(all_df)
 
 # Top 5 Most Popular Category in Leading Cities
 st.markdown("<h2 class='medium-font'>Top 5 Product Categories by City 🏙️</h2>", unsafe_allow_html=True)
