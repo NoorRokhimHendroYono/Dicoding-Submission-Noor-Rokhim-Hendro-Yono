@@ -75,7 +75,11 @@ st.markdown("""
 
 @st.cache_data
 def load_data():
-    return pd.read_csv('https://raw.githubusercontent.com/NoorRokhimHendroYono/Dicoding-Submission-Noor-Rokhim-Hendro-Yono/refs/heads/master/dashboard/Project_Data_Clean.csv')
+    try:
+        return pd.read_csv('https://raw.githubusercontent.com/NoorRokhimHendroYono/Dicoding-Submission-Noor-Rokhim-Hendro-Yono/refs/heads/master/dashboard/Project_Data_Clean.csv')
+    except Exception as e:
+        st.error(f"Error loading data: {e}")
+        return pd.DataFrame()  # Return an empty DataFrame to avoid further errors
 
 def create_top_categories_bycity_df(df):
     return df.rename(columns={"product_category_name_english": "category_name"})
